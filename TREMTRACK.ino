@@ -23,7 +23,6 @@ void setup(){
   pinMode(blue_light_pin, OUTPUT);
 }
 
-  //analogWrite(red_light_pin, red_light_value);
 void RGB_color(int red_light_value, int green_light_value, int blue_light_value)
  {
   analogWrite(red_light_pin, red_light_value);
@@ -34,20 +33,9 @@ void RGB_color(int red_light_value, int green_light_value, int blue_light_value)
 void Warning(){
   RGB_color(255, 0, 0); // Red
   delay(1000);
-  RGB_color(0, 255, 0); // Green
-  delay(1000);
-  RGB_color(0, 0, 255); // Blue
-  delay(1000);
-  RGB_color(255, 255, 125); // Raspberry
-  delay(1000);
-  RGB_color(0, 255, 255); // Cyan
-  delay(1000);
-  RGB_color(255, 0, 255); // Magenta
-  delay(1000);
-  RGB_color(255, 255, 0); // Yellow
-  delay(1000);
-  RGB_color(255, 255, 255); // White
-  delay(1000);
+  
+
+ 
 }
 
 void input(){
@@ -62,19 +50,47 @@ void input(){
   int GZ[100];
   */
 
+  int Sensvals[1000];
   Wire.beginTransmission(MPU);
   Wire.write(0x3B);  
   Wire.endTransmission(false);
   Wire.requestFrom(MPU,12,true);  
 
-  AcX1=Wire.read()<<8|Wire.read();    
-  AcY1=Wire.read()<<8|Wire.read();  
-  AcZ1=Wire.read()<<8|Wire.read();  
-  GyX1=Wire.read()<<8|Wire.read();  
-  GyY1=Wire.read()<<8|Wire.read();  
-  GyZ1=Wire.read()<<8|Wire.read();
+  for(int i = 0; i<8; i+3){
 
-  delay(167);
+    AcX1=Wire.read()<<8|Wire.read();    
+    AcY1=Wire.read()<<8|Wire.read();  
+    AcZ1=Wire.read()<<8|Wire.read();
+
+    Sensvals[i] = AcX1;
+    Sensvals[i+1] = AcY1;
+    Sensvals[i+2] = AcZ1;
+
+    delay(167);
+  }
+
+  Serial.print("Accelerometer: ");
+  Serial.print("X = "); Serial.print(Sensvals[0]);
+  Serial.print(" | Y = "); Serial.print(Sensvals[1]);
+  Serial.print(" | Z = "); Serial.println(Sensvals[2]); 
+
+  Serial.print("X = "); Serial.print(Sensvals[3]);
+  Serial.print(" | Y = "); Serial.print(Sensvals[4]);
+  Serial.print(" | Z = "); Serial.println(Sensvals[5]); 
+
+  Serial.print("X = "); Serial.print(Sensvals[6]);
+  Serial.print(" | Y = "); Serial.print(Sensvals[7]);
+  Serial.print(" | Z = "); Serial.println(Sensvals[8]); 
+
+
+
+  
+
+
+
+  
+
+  /*
 
   AcX2=Wire.read()<<8|Wire.read();    
   AcY2=Wire.read()<<8|Wire.read();  
@@ -92,88 +108,38 @@ void input(){
   GyY3=Wire.read()<<8|Wire.read();  
   GyZ3=Wire.read()<<8|Wire.read();
 
+  
+
   int X = 0, Y = 0, Z = 0;
 
-  if(AcX1 - AcX2 > 5000 && AcX3 - AcX1 < 2000){
-    X = 1;
+  if(AcX1 - AcX2 > 3000 && AcX3 - AcX1 < 2000){
+    X = X+1;
   }
-  else{X=0;}
+  else{}
 
-  if(AcY1 - AcY2 > 5000 && AcY3 - AcY1 < 2000){
-    Y = 1;
+  if(AcY1 - AcY2 > 3000 && AcY3 - AcY1 < 2000){
+    Y = Y+1;
   }
-  else{Y=0;}
+  else{}
 
-  if(AcZ1 - AcZ2 > 5000 && AcZ3 - AcZ1 < 2000){
-    Z = 1;
+  if(AcZ1 - AcZ2 > 3000 && AcZ3 - AcZ1 < 2000){
+    Z = Z+1;
   }
-  else{Z=0;}
+  else{}
 
-  if(X=1 && Y=1 && Z=1){
+  if(X==1 && Y==1 && Z==1){
     //Warning();
-    Serial.print("WARNING");    
+    //Serial.print("WARNING");    
   }
-  else{Serial.print("Nothing")}
+  else{Serial.print("Nothing");}
 
-  /*
-  Serial.print("Accelerometer: ");
-  Serial.print("X = "); Serial.print(AcX1);
-  Serial.print(" | Y = "); Serial.print(AcY1);
-  Serial.print(" | Z = "); Serial.println(AcZ1); 
-
-
-  
-  Serial.print("Gyroscope: ");
-  Serial.print("X = "); Serial.print(GyX1);
-  Serial.print(" | Y = "); Serial.print(GyY1);
-  Serial.print(" | Z = "); Serial.println(GyZ1);
-  Serial.println(" ");
-  delay(333);
   */
   
 }
 
 void loop(){
-  
-/*
-  int buzzer = 10;          
 
-  tone(buzzer, 262, 250);   
-  delay(325);              
-  noTone(buzzer);           
-
-  tone(buzzer, 196, 125);
-  delay(162);
-  noTone(buzzer);
-
-  tone(buzzer, 196, 250);
-  delay(325);
-  noTone(buzzer);
-
-  tone(buzzer, 220, 250);
-  delay(325);
-  noTone(buzzer);
-
-  tone(buzzer, 196, 250);
-  delay(325);
-  noTone(buzzer);
-
-  tone(buzzer, 0, 250);
-  delay(325);
-  noTone(buzzer);
-
-  tone(buzzer, 247, 250);
-  delay(325);
-  noTone(buzzer);
-
-  tone(buzzer, 262, 250);
-  delay(325);
-  noTone(buzzer);
-
-  delay(1000);
-
-*/
   input();
-  
+  Warning();
 }
 
